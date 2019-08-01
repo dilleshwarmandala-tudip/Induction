@@ -1,0 +1,335 @@
+{
+	"info": {
+		"_postman_id": "f825e120-d1b5-4da1-8493-1f64c0823edf",
+		"name": "Extra requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "granular",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "62ed6ced-28c9-432a-87ad-79feda10cbbc",
+						"exec": [
+							"// TO test the status code",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// To check the response time",
+							"pm.test(\"Response time is less than 1 second\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});    ",
+							"",
+							"let jsonData = JSON.parse(responseBody);",
+							"const channelSchema = {",
+							"  \"type\": \"object\",",
+							"//   \"required\": [\"seriesId1\"],",
+							"  \"properties\": {",
+							"    \"start\": {",
+							"      \"type\": \"string\",",
+							"      \"index\": true",
+							"    },",
+							"    \"end\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"programTitle\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"iconSrc\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"seriesId1\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"episodeId\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"runtimeMinutes\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"creationYear\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"duration\": {",
+							"      \"type\": \"number\"",
+							"    },",
+							"    \"originatingCountry\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"episodeType\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"rtitle\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    // \"episodeTitle\": {",
+							"    //   \"type\": \"string\"",
+							"    // },",
+							"    // \"description\": {",
+							"    //   \"type\": \"string\"",
+							"    // },",
+							"    // \"reducedDescription\": {",
+							"    //   \"type\": \"string\"",
+							"    // },",
+							"    \"epgChannelId\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"epgProgramId\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    \"channelCallLetter\": {",
+							"      \"type\": \"string\",",
+							"      \"index\": true",
+							"    },",
+							"    \"category\": {",
+							"      \"type\": \"string\"",
+							"    },",
+							"    // \"ratings\": {",
+							"    //   \"type\": [",
+							"    //     {",
+							"    //       \"system\": {",
+							"    //         \"type\": \"string\"",
+							"    //       },",
+							"    //       \"value\": {",
+							"    //         \"type\": \"string\"",
+							"    //       }",
+							"    //     }",
+							"    //   ]",
+							"    // },",
+							"    \"createdOn\": {",
+							"      \"type\": \"date\"",
+							"    },",
+							"    \"lastUpdatedOn\": {",
+							"      \"type\": \"date\"",
+							"    },",
+							"    \"timeshiftEnabled\": {",
+							"      \"type\": \"boolean\"",
+							"    },",
+							"    // \"timeshiftSettings\": {",
+							"    //   \"type\": {",
+							"    //     \"rewind\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"fastForward\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"pause\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"trickSpeed_1x\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"trickSpeed_2x\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"trickSpeed_3x\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     },",
+							"    //     \"currentAiring\": {",
+							"    //       \"type\": \"boolean\",",
+							"    //       \"default\": false",
+							"    //     }",
+							"    //   }",
+							"    // }",
+							"  }",
+							"};",
+							"var checkProperty = (arr) => {",
+							"    let flag = true;",
+							"    for (let index = 0; index < arr.length; index++) {",
+							"        let result = tv4.validateMultiple(arr[index], channelSchema)",
+							"        if(!result.valid) {",
+							"            console.log(result.errors);",
+							"            console.log(\"error at index\", index, arr[index]);",
+							"            flag = false;",
+							"             break;",
+							"        }",
+							"    }",
+							"    return flag;",
+							"}    ",
+							"tests[\"schema is valid\"] = checkProperty(jsonData.programs)",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "01da883b-777e-4464-8229-82c10837ccdd",
+						"exec": [
+							"var date = new Date()",
+							"var startTime = date.toISOString().split('.');",
+							"var endDate = date.setDate(new Date().getDate() + 1)",
+							"var endTime = new Date(endDate).toISOString().split('.');",
+							"var start = encodeURIComponent(startTime[0]);",
+							"var end = encodeURIComponent(endTime[0])",
+							"pm.environment.set(\"start\", start);",
+							"pm.environment.set(\"end\", end);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://ott-dev.tv2consulting.com/epg/granular?callLetter=WVANH&start={{start}}&end={{end}}&inJSON=true",
+					"protocol": "https",
+					"host": [
+						"ott-dev",
+						"tv2consulting",
+						"com"
+					],
+					"path": [
+						"epg",
+						"granular"
+					],
+					"query": [
+						{
+							"key": "callLetter",
+							"value": "WVANH"
+						},
+						{
+							"key": "start",
+							"value": "{{start}}"
+						},
+						{
+							"key": "end",
+							"value": "{{end}}"
+						},
+						{
+							"key": "inJSON",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bookmark API (GET)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cbe9d4bf-865e-42f4-aa2c-7778b58ccf98",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"var schema = {",
+							"    \"type\": \"object\",",
+							"    \"properties\": {",
+							"        \"accountId\": {",
+							"            \"type\": \"string\",",
+							"        },",
+							"        \"recordingId\": {",
+							"            \"type\": \"string\",",
+							"        },",
+							"        \"lastPosition\": {",
+							"            \"type\": \"string\",",
+							"        },",
+							"        \"createTime\": {",
+							"            \"type\": \"string\",",
+							"        },",
+							"        \"deviceName\": {",
+							"            \"type\": \"string\"",
+							"        }",
+							"    }",
+							"}",
+							"const jsonData = JSON.parse(responseBody);",
+							"const validateProperties = (arr) => {",
+							"    let flag = true;",
+							"    for (let index = 0; index < arr.length; index++) {",
+							"        let result = tv4.validateMultiple(arr[index], schema)",
+							"        if(!result.valid) {",
+							"            console.log(result.errors);",
+							"            console.log(\"error at index\", index, arr[index]);",
+							"            flag = false;",
+							"             break;",
+							"        }",
+							"    }",
+							"    return flag;",
+							"}",
+							"",
+							"tests[\"valid schema\"] = validateProperties(jsonData.response.items)",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3001/recordings/mds/bookmarks",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"recordings",
+						"mds",
+						"bookmarks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "settings/findAll",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Authorization}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url}}/settings/findAll",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"settings",
+						"findAll"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
